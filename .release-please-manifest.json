@@ -1,4 +1,4 @@
 {
-  "workflows/echo": "0.0.0",
+  "workflows/echo": "1.0.0",
   "workflows/hello-weather": "0.0.0"
 }
