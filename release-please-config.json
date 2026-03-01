@@ -8,6 +8,12 @@
       "release-type": "go",
       "bump-minor-pre-major": true,
       "bump-patch-for-minor-pre-major": true
+    },
+    "workflows/hello-weather": {
+      "component": "hello-weather",
+      "release-type": "go",
+      "bump-minor-pre-major": true,
+      "bump-patch-for-minor-pre-major": true
     }
   }
 }

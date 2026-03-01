@@ -15,6 +15,7 @@ Each child directory under `workflows/` is an independently versioned workflow c
 Example:
 
 - `workflows/echo`
+- `workflows/hello-weather`
 - `workflows/gmail-monthly-report`
 - `workflows/discord-weekly-digest`
 
