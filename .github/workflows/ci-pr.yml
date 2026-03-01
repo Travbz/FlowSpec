@@ -1,0 +1,73 @@
+name: CI PR
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  detect-workflows:
+    runs-on: ubuntu-latest
+    outputs:
+      workflows: ${{ steps.changed.outputs.workflows }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: changed
+        uses: ./.github/actions/changed-workflows
+        with:
+          base_sha: ${{ github.event.pull_request.base.sha }}
+          head_sha: ${{ github.sha }}
+
+  lint:
+    needs: detect-workflows
+    if: needs.detect-workflows.outputs.workflows != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        workflow_path: ${{ fromJson(needs.detect-workflows.outputs.workflows) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: ${{ matrix.workflow_path }}/go.mod
+      - uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+          working-directory: ${{ matrix.workflow_path }}
+
+  test:
+    needs: detect-workflows
+    if: needs.detect-workflows.outputs.workflows != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        workflow_path: ${{ fromJson(needs.detect-workflows.outputs.workflows) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: ${{ matrix.workflow_path }}/go.mod
+      - run: go test ./... -v
+        working-directory: ${{ matrix.workflow_path }}
+
+  docker-build-sha:
+    needs: detect-workflows
+    if: needs.detect-workflows.outputs.workflows != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        workflow_path: ${{ fromJson(needs.detect-workflows.outputs.workflows) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build commit-SHA image tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          workflow_name="$(basename "${{ matrix.workflow_path }}")"
+          docker build \
+            -t "ghcr.io/${{ github.repository_owner }}/workflow-${workflow_name}:sha-${{ github.sha }}" \
+            "${{ matrix.workflow_path }}"

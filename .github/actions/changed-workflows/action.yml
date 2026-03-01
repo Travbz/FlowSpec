@@ -1,0 +1,33 @@
+name: Changed Workflows
+description: Detect changed workflow directories under workflows/
+inputs:
+  base_sha:
+    description: Base git SHA for diff
+    required: true
+  head_sha:
+    description: Head git SHA for diff
+    required: true
+outputs:
+  workflows:
+    description: JSON array of changed workflow paths
+    value: ${{ steps.detect.outputs.workflows }}
+runs:
+  using: composite
+  steps:
+    - id: detect
+      shell: bash
+      run: |
+        set -euo pipefail
+        changed_paths=$(git diff --name-only "${{ inputs.base_sha }}" "${{ inputs.head_sha }}" \
+          | awk -F/ '/^workflows\/[^/]+\// {print $1 "/" $2}' \
+          | sort -u)
+
+        if [[ -z "${changed_paths}" ]]; then
+          echo 'workflows=[]' >> "${GITHUB_OUTPUT}"
+          exit 0
+        fi
+
+        workflows_json=$(printf '%s\n' "${changed_paths}" \
+          | awk 'NF' \
+          | jq -R -s -c 'split("\n") | map(select(. != ""))')
+        echo "workflows=${workflows_json}" >> "${GITHUB_OUTPUT}"

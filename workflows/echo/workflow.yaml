@@ -1,0 +1,12 @@
+name: echo
+description: Minimal reference workflow for SignalForge.
+version: 0.1.0
+runtime:
+  language: go
+  entrypoint: /usr/local/bin/workflow-echo
+contract:
+  input: json
+  output: json
+image:
+  repository: ghcr.io/yourorg/workflow-echo
+  tag: latest
