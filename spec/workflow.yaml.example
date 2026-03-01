@@ -1,0 +1,15 @@
+name: example-workflow
+description: Example workflow definition for SignalForge.
+version: 0.1.0
+
+runtime:
+  language: go
+  entrypoint: /usr/local/bin/workflow-example
+
+contract:
+  input: json
+  output: json
+
+image:
+  repository: ghcr.io/yourorg/workflow-example
+  tag: latest

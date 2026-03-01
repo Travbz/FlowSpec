@@ -1,0 +1,36 @@
+name: Publish On Tag
+
+on:
+  push:
+    tags:
+      - "*-v*.*.*"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Parse release tag
+        id: parse
+        uses: ./.github/actions/parse-release-tag
+        with:
+          tag: ${{ github.ref_name }}
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: ${{ steps.parse.outputs.workflow_dir }}
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/workflow-${{ steps.parse.outputs.component }}:${{ steps.parse.outputs.version }}
+            ghcr.io/${{ github.repository_owner }}/workflow-${{ steps.parse.outputs.component }}:latest

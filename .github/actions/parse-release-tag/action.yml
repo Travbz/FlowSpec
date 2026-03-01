@@ -1,0 +1,41 @@
+name: Parse Release Tag
+description: Parse <component>-v<semver> release tags into workflow metadata
+inputs:
+  tag:
+    description: Tag name to parse
+    required: true
+outputs:
+  component:
+    description: Workflow component name from tag
+    value: ${{ steps.parse.outputs.component }}
+  version:
+    description: Version from tag
+    value: ${{ steps.parse.outputs.version }}
+  workflow_dir:
+    description: Workflow directory path
+    value: ${{ steps.parse.outputs.workflow_dir }}
+runs:
+  using: composite
+  steps:
+    - id: parse
+      shell: bash
+      run: |
+        set -euo pipefail
+        tag="${{ inputs.tag }}"
+        if [[ "${tag}" =~ ^([A-Za-z0-9._-]+)-v([0-9]+\.[0-9]+\.[0-9]+.*)$ ]]; then
+          component="${BASH_REMATCH[1]}"
+          version="${BASH_REMATCH[2]}"
+        else
+          echo "Unsupported tag format: ${tag}"
+          exit 1
+        fi
+
+        workflow_dir="workflows/${component}"
+        if [[ ! -f "${workflow_dir}/Dockerfile" ]]; then
+          echo "No workflow Dockerfile found at ${workflow_dir}"
+          exit 1
+        fi
+
+        echo "component=${component}" >> "${GITHUB_OUTPUT}"
+        echo "version=${version}" >> "${GITHUB_OUTPUT}"
+        echo "workflow_dir=${workflow_dir}" >> "${GITHUB_OUTPUT}"
