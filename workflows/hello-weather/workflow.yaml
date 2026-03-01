@@ -1,0 +1,12 @@
+name: hello-weather
+description: Fetches a 5-day weather forecast and summarizes it with an LLM.
+version: 0.1.0
+runtime:
+  language: go
+  entrypoint: /usr/local/bin/workflow-hello-weather
+contract:
+  input: json
+  output: json
+image:
+  repository: ghcr.io/yourorg/workflow-hello-weather
+  tag: latest

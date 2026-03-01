@@ -1,5 +1,5 @@
 name: example-workflow
-description: Example workflow definition for SignalForge.
+description: Example workflow definition for FlowSpec.
 version: 0.1.0
 
 runtime:
