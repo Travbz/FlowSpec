@@ -23,7 +23,7 @@ const (
 	defaultGeoBaseURL = "https://geocoding-api.open-meteo.com"
 	defaultWxBaseURL  = "https://api.open-meteo.com"
 	defaultLLMBaseURL = "https://api.anthropic.com"
-	defaultModel      = "claude-3-5-sonnet-latest"
+	defaultModel      = "claude-sonnet-4-20250514"
 )
 
 var httpClient = &http.Client{Timeout: 20 * time.Second}
