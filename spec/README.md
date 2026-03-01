@@ -1,6 +1,6 @@
-# SignalForge Workflow Spec
+# FlowSpec Workflow Spec
 
-SignalForge stores workflow implementations and workflow metadata.
+FlowSpec stores workflow implementations and workflow metadata.
 
 It does not store MCP tool-sidecar implementations. MCP tools live in a separate repository and are provided to workflows at runtime by sandbox configuration.
 
@@ -24,7 +24,7 @@ Each workflow directory under `workflows/<name>/` should contain:
 
 ## Runtime Behavior
 
-- `control-plane` resolves workflow image and launches sandbox runtime.
+- `CommandGrid` resolves workflow image and launches sandbox runtime.
 - workflow process executes inside sandbox.
 - workflow may call external MCP tools through configured endpoints.
 - workflow LLM calls route through the configured proxy stack.

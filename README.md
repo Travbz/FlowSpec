@@ -1,13 +1,13 @@
-# SignalForge
+# FlowSpec
 
-SignalForge is a standalone workflow monorepo. It contains reusable workflow implementations that run inside sandbox environments and are invoked by `control-plane` via image reference.
+FlowSpec is a standalone workflow monorepo. It contains reusable workflow implementations that run inside sandbox environments and are invoked by `CommandGrid` via image reference.
 
-SignalForge does not host MCP tool sidecars. Workflows in this repo can call tools from a separate tool repo through configured MCP endpoints.
+FlowSpec does not host MCP tool sidecars. Workflows in this repo can call tools from a separate tool repo through configured MCP endpoints.
 
 ## Repository layout
 
 ```text
-SignalForge/
+FlowSpec/
 ├── workflows/
 │   └── <workflow-name>/
 │       ├── main.go
