@@ -4,6 +4,19 @@ FlowSpec is a standalone workflow monorepo. It contains reusable workflow implem
 
 FlowSpec does not host MCP tool sidecars. Workflows in this repo can call tools from a separate tool repo through configured MCP endpoints.
 
+## Workflow integration policy (hybrid)
+
+FlowSpec uses a hybrid integration model:
+
+- Workflows may call external APIs directly when the integration is simple, low-risk, and only used by one workflow.
+- Shared or high-risk integrations should be implemented as reusable tools in `ToolCore`.
+
+Promote a direct workflow integration into `ToolCore` when any of these are true:
+
+- The integration is reused by 2+ workflows.
+- The integration handles high-value secrets or sensitive data.
+- Centralized policy enforcement is required (validation, audit, retries, rate limits, allowlists).
+
 ## Repository layout
 
 ```text
